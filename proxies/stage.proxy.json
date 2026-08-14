@@ -1,0 +1,24 @@
+{
+  "/api": {
+    "target": "https://web-chat.addprocess.pro/",
+    "secure": false,
+    "logLevel": "debug",
+    "xfwd": true,
+    "changeOrigin": true
+  },
+  "/hubs": {
+    "target": "https://web-chat.addprocess.pro/",
+    "secure": false,
+    "logLevel": "debug",
+    "ws": true,
+    "xfwd": true,
+    "changeOrigin": true
+  },
+  "/swagger": {
+    "target": "https://web-chat.addprocess.pro/",
+    "secure": false,
+    "logLevel": "debug",
+    "xfwd": true,
+    "changeOrigin": true
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "/api": {
+    "target": "http://localhost:5284",
+    "secure": false,
+    "logLevel": "debug",
+    "xfwd": true,
+    "changeOrigin": true
+  },
+  "/hubs": {
+    "target": "http://localhost:5284",
+    "secure": false,
+    "logLevel": "debug",
+    "ws": true,
+    "xfwd": true,
+    "changeOrigin": true
+  },
+  "/swagger": {
+    "target": "http://localhost:5284",
+    "secure": false,
+    "logLevel": "debug",
+    "xfwd": true,
+    "changeOrigin": true
+  }
+}

@@ -1,0 +1,21 @@
+.bot-card {
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Optional hover effect */
+.bot-card:hover {
+  border-color: #2563EB;
+}
+
+.bot-card h3 {
+  margin-top: 0;
+}
+
+.bot-card button {
+  margin-right: 10px;
+}
