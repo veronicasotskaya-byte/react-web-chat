@@ -14,10 +14,7 @@ import { FaList } from "react-icons/fa";
 import type { Agent } from "../types/Agent";
 import type { RootState, AppDispatch } from "../app/store";
 
-import {
-  fetchAgents,
-  deleteAgentThunk,
-} from "../features/agents/agentSlice";
+import { fetchAgents, deleteAgentThunk } from "../features/agents/agentSlice";
 
 function Agents() {
   const [view, setView] = useState<"cards" | "grid">("cards");
@@ -94,7 +91,7 @@ function Agents() {
 
   return (
     <DashboardLayout>
-      <h1>Agents</h1>
+      <h1>My test Agents</h1>
 
       {loading && <p>Loading agents...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
