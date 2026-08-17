@@ -91,7 +91,7 @@ function Agents() {
 
   return (
     <DashboardLayout>
-      <h1>My test Agents</h1>
+      <h1>Hello My test Agents</h1>
 
       {loading && <p>Loading agents...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
