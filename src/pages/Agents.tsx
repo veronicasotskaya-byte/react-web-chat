@@ -14,30 +14,25 @@ import { FaList } from "react-icons/fa";
 import type { Agent } from "../types/Agent";
 import type { RootState, AppDispatch } from "../app/store";
 
-import {
-  fetchAgents,
-  deleteAgentThunk,
-} from "../features/agents/agentSlice";
+import { fetchAgents, deleteAgentThunk } from "../features/agents/agentSlice";
 
 function Agents() {
   const [view, setView] = useState<"cards" | "grid">("cards");
+
   const [sortBy, setSortBy] = useState<"id" | "name" | "email">("id");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const agentsPerPage = 6;
+
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const { agents, loading, error } = useSelector(
     (state: RootState) => state.agents,
   );
-
-  const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const agentsPerPage = 6;
-  const agentsAndBots = useSelector(
-    (state: RootState) => state.agents.agentsAndBots,
-  );
-  console.log("Agents and bots:", agentsAndBots);
 
   useEffect(() => {
     void dispatch(fetchAgents());
@@ -49,7 +44,7 @@ function Agents() {
 
   function handleSort(column: "id" | "name" | "email") {
     if (sortBy === column) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      setSortDirection((current) => (current === "asc" ? "desc" : "asc"));
     } else {
       setSortBy(column);
       setSortDirection("asc");
@@ -86,145 +81,204 @@ function Agents() {
     return sortDirection === "asc" ? result : -result;
   });
 
-  const startIndex = (currentPage - 1) * agentsPerPage;
-  const endIndex = startIndex + agentsPerPage;
-
-  const paginatedAgents = sortedAgents.slice(startIndex, endIndex);
   const totalPages = Math.ceil(sortedAgents.length / agentsPerPage);
+
+  const startIndex = (currentPage - 1) * agentsPerPage;
+
+  const paginatedAgents = sortedAgents.slice(
+    startIndex,
+    startIndex + agentsPerPage,
+  );
+
+  // Reset to page 1 if the current page becomes invalid
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+
+    if (totalPages === 0 && currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [currentPage, totalPages]);
+
+  // Return to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   return (
     <DashboardLayout>
-      <h1>Agents</h1>
+      <div className="space-y-6">
+        {/* Page header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+              Agents
+            </h1>
 
-      {loading && <p>Loading agents...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+            <p className="mt-1 text-sm text-gray-500">
+              Manage your agents and their availability.
+            </p>
+          </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          marginBottom: "20px",
-        }}
-      >
-        <Input
-          label="Search"
-          type="text"
-          placeholder="Search agents..."
-          value={search}
-          onChange={setSearch}
-        />
+          <Button text="+ Add agent" onClick={() => navigate("/agents/new")} />
+        </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-            gap: "10px",
-          }}
-        >
-          <Button text="Add Agent" onClick={() => navigate(`/agents/new`)} />
+        {/* Search + view controls */}
+        <div className="flex items-center justify-between gap-4">
+          <div className="w-full max-w-xs">
+            <Input
+              type="text"
+              placeholder="Search agents..."
+              value={search}
+              onChange={setSearch}
+            />
+          </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-            }}
-          >
+          <div className="-mt-3.2 flex items-center gap-2">
             <button
+              type="button"
               onClick={() => setView("cards")}
-              style={{
-                padding: "8px",
-                borderRadius: "6px",
-                border:
-                  view === "cards" ? "2px solid #2563eb" : "1px solid #ccc",
-                background: view === "cards" ? "#eff6ff" : "white",
-                cursor: "pointer",
-              }}
+              aria-label="Card view"
+              className={[
+                "flex h-10 w-10 items-center justify-center rounded-lg border transition-colors",
+                view === "cards"
+                  ? "border-indigo-600 bg-indigo-50 text-indigo-700"
+                  : "border-gray-300 bg-white text-gray-500 hover:bg-gray-50",
+              ].join(" ")}
             >
               <BsGrid3X3GapFill />
             </button>
 
             <button
+              type="button"
               onClick={() => setView("grid")}
-              style={{
-                padding: "8px",
-                borderRadius: "6px",
-                border:
-                  view === "grid" ? "2px solid #2563eb" : "1px solid " + "#ccc",
-                background: view === "grid" ? "#eff6ff" : "white",
-                cursor: "pointer",
-              }}
+              aria-label="Table view"
+              className={[
+                "flex h-10 w-10 items-center justify-center rounded-lg border transition-colors",
+                view === "grid"
+                  ? "border-indigo-600 bg-indigo-50 text-indigo-700"
+                  : "border-gray-300 bg-white text-gray-500 hover:bg-gray-50",
+              ].join(" ")}
             >
               <FaList />
             </button>
           </div>
         </div>
-      </div>
 
-      {view === "cards" ? (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "20px",
-            marginTop: "24px",
-          }}
-        >
-          {paginatedAgents.map((agent) => (
-            <AgentCard
-              key={agent.userId}
-              agent={agent}
-              onDelete={handleDeleteAgent}
-              onEdit={handleEditAgent}
-            />
-          ))}
-        </div>
-      ) : (
-        <AgentTable
-          agents={paginatedAgents}
-          onDelete={handleDeleteAgent}
-          onEdit={handleEditAgent}
-          sortBy={sortBy}
-          sortDirection={sortDirection}
-          onSort={handleSort}
-        />
-      )}
-      <div
-        style={{
-          paddingBottom: "16px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "8px",
-          marginTop: "24px",
-        }}
-      >
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
+        {/* Loading */}
+        {loading && (
+          <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+            <p className="text-sm text-gray-500">Loading agents...</p>
+          </div>
+        )}
 
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            style={{
-              fontWeight: currentPage === index + 1 ? "bold" : "normal",
-            }}
-          >
-            {index + 1}
-          </button>
-        ))}
+        {/* Error */}
+        {error && !loading && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+            <p className="text-sm font-medium text-red-700">{error}</p>
+          </div>
+        )}
 
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages || totalPages === 0}
-        >
-          Next
-        </button>
+        {/* Empty state */}
+        {!loading && !error && filteredAgents.length === 0 && (
+          <div className="rounded-xl border border-gray-200 bg-white px-6 py-12 text-center shadow-sm">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+              <span className="text-xl text-gray-500">◉</span>
+            </div>
+
+            <h2 className="text-base font-semibold text-gray-900">
+              {search.trim() ? "No agents found" : "No agents yet"}
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              {search.trim()
+                ? "Try a different search term."
+                : "Create your first agent to get started."}
+            </p>
+
+            {!search.trim() && (
+              <div className="mt-5">
+                <Button
+                  text="+ Add agent"
+                  onClick={() => navigate("/agents/new")}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Agents */}
+        {!loading && !error && paginatedAgents.length > 0 && (
+          <>
+            {view === "cards" ? (
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {paginatedAgents.map((agent) => (
+                  <AgentCard
+                    key={agent.userId}
+                    agent={agent}
+                    onDelete={handleDeleteAgent}
+                    onEdit={handleEditAgent}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="overflow-hidden rounded-xl border border-gray-300 bg-white">
+                <AgentTable
+                  agents={paginatedAgents}
+                  onDelete={handleDeleteAgent}
+                  onEdit={handleEditAgent}
+                  sortBy={sortBy}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                />
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Pagination */}
+        {!loading && !error && totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => page - 1)}
+              disabled={currentPage === 1}
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPages }, (_, index) => {
+              const page = index + 1;
+
+              return (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => setCurrentPage(page)}
+                  className={[
+                    "h-9 min-w-9 rounded-lg px-3 text-sm font-medium transition-colors",
+                    currentPage === page
+                      ? "bg-indigo-600 text-white"
+                      : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50",
+                  ].join(" ")}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => page + 1)}
+              disabled={currentPage === totalPages}
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

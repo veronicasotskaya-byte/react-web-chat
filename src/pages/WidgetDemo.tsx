@@ -12,12 +12,7 @@ function parseApiErrorMessage(raw: string): string {
       title?: string;
     };
 
-    return (
-      parsed.exception?.message ||
-      parsed.message ||
-      parsed.title ||
-      raw
-    );
+    return parsed.exception?.message || parsed.message || parsed.title || raw;
   } catch {
     return raw;
   }
@@ -66,34 +61,53 @@ function WidgetDemo() {
 
   if (loading) {
     return (
-      <div style={{ padding: "40px", textAlign: "center" }}>
-        Loading widget...
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+        <div className="rounded-xl border border-gray-200 bg-white px-8 py-10 text-center shadow-sm">
+          <p className="text-sm text-gray-500">Loading widget...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{ padding: "40px", maxWidth: "640px", margin: "0 auto" }}>
-        <h2>Unable to load widget</h2>
-        <p style={{ color: "#b91c1c", whiteSpace: "pre-wrap" }}>{error}</p>
-        <p style={{ color: "#666", marginTop: "16px" }}>
-          If this is a CORS / origin error, add{" "}
-          <code>{window.location.origin}</code> to the widget&apos;s Allowed
-          Origins and save, then try again.
-        </p>
-        <p style={{ marginTop: "16px" }}>
-          <Link to="/widgets">Back to widgets</Link>
-        </p>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+        <div className="w-full max-w-lg rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+          <h2 className="text-xl font-bold tracking-tight text-gray-900">
+            Unable to load widget
+          </h2>
+          <p className="mt-3 whitespace-pre-wrap text-sm font-medium text-red-600">
+            {error}
+          </p>
+          <p className="mt-6">
+            <Link
+              to="/widgets"
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+            >
+              Back to widgets
+            </Link>
+          </p>
+        </div>
       </div>
     );
   }
 
   if (!widget) {
     return (
-      <div style={{ padding: "40px" }}>
-        Widget not found.{" "}
-        <Link to="/widgets">Back to widgets</Link>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <h2 className="text-base font-semibold text-gray-900">
+            Widget not found.
+          </h2>
+          <p className="mt-4">
+            <Link
+              to="/widgets"
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+            >
+              Back to widgets
+            </Link>
+          </p>
+        </div>
       </div>
     );
   }
@@ -102,114 +116,42 @@ function WidgetDemo() {
     widget.assignedAgent?.welcomeMessages?.[0]?.message?.text;
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f5f5f5",
-        padding: "20px",
-      }}
-    >
-      <div
-        style={{
-          width: "380px",
-          maxWidth: "100%",
-          background: "white",
-          borderRadius: "12px",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            padding: "16px",
-            borderBottom: "1px solid #eee",
-          }}
-        >
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-5">
+      <div className="w-full max-w-sm overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md">
+        <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-4">
           {widget.avatarUrl ? (
             <img
               src={widget.avatarUrl}
               alt={widget.name}
-              style={{
-                width: "42px",
-                height: "42px",
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
+              className="h-10 w-10 rounded-full object-cover"
             />
           ) : (
-            <div
-              style={{
-                width: "42px",
-                height: "42px",
-                borderRadius: "50%",
-                background: "#2563eb",
-              }}
-            />
+            <div className="h-10 w-10 rounded-full bg-indigo-600" />
           )}
 
-          <div>
-            <strong>{widget.name}</strong>
-          </div>
+          <p className="text-sm font-semibold text-gray-900">{widget.name}</p>
         </div>
 
-        <div
-          style={{
-            minHeight: "300px",
-            padding: "20px",
-          }}
-        >
+        <div className="min-h-[300px] p-5">
           {welcomeMessage ? (
-            <div
-              style={{
-                display: "inline-block",
-                maxWidth: "80%",
-                padding: "10px 14px",
-                background: "#f1f1f1",
-                borderRadius: "12px",
-              }}
-            >
+            <div className="inline-block max-w-[80%] rounded-xl bg-gray-100 px-3.5 py-2.5 text-sm text-gray-800">
               {welcomeMessage}
             </div>
           ) : (
-            <p style={{ color: "#666" }}>No welcome message available.</p>
+            <p className="text-sm text-gray-500">No welcome message available.</p>
           )}
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "8px",
-            padding: "12px",
-            borderTop: "1px solid #eee",
-          }}
-        >
+        <div className="flex gap-2 border-t border-gray-100 p-3">
           <input
             type="text"
             placeholder="Type a message..."
-            style={{
-              flex: 1,
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "6px",
-            }}
+            className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
 
           <button
             type="button"
-            style={{
-              padding: "10px 16px",
-              border: "none",
-              borderRadius: "6px",
-              background: "#2563eb",
-              color: "white",
-              cursor: "pointer",
-            }}
+            className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
           >
             Send
           </button>

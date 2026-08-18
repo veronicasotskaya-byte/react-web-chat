@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 import Input from "../components/Input";
-import Button_small from "../components/Button_small";
+import Button_big from "../components/Button_big";
 import WidgetTable from "../components/WidgetTable";
 
 import type { RootState, AppDispatch } from "../app/store";
@@ -70,49 +70,92 @@ function Widgets() {
 
   return (
     <DashboardLayout>
-      <h1>Widgets</h1>
+      <div className="space-y-6">
+        {/* Page header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+              Widgets
+            </h1>
 
-      {loading && <p>Loading widgets...</p>}
+            <p className="mt-1 text-sm text-gray-500">
+              Manage your web chat widgets and their configuration.
+            </p>
+          </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          <Button_big
+            text="+ Add widget"
+            onClick={() => navigate("/widgets/new")}
+          />
+        </div>
 
-      {!loading && !error && filteredWidgets.length === 0 && (
-        <p>No widgets found.</p>
-      )}
+        {/* Search */}
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          marginBottom: "20px",
-          gap: "20px",
-        }}
-      >
-        <Input
-          label="Search"
-          type="text"
-          placeholder="Search widgets..."
-          value={search}
-          onChange={setSearch}
-        />
+        <div className="max-w-xs">
+          <Input
+            type="text"
+            placeholder="Search by widget name..."
+            value={search}
+            onChange={setSearch}
+          />
+        </div>
 
-        <Button_small
-          text="Add widget"
-          onClick={() => navigate("/widgets/new")}
-        />
+        {/* Loading */}
+        {loading && (
+          <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+            <div className="text-sm text-gray-500">Loading widgets...</div>
+          </div>
+        )}
+
+        {/* Error */}
+        {error && !loading && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+            <p className="text-sm font-medium text-red-700">{error}</p>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!loading && !error && filteredWidgets.length === 0 && (
+          <div className="rounded-xl border border-gray-200 bg-white px-6 py-12 text-center shadow-sm">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+              <span className="text-xl text-gray-500">◉</span>
+            </div>
+
+            <h2 className="text-base font-semibold text-gray-900">
+              {search.trim() ? "No widgets found" : "No widgets yet"}
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              {search.trim()
+                ? "Try a different search term."
+                : "Create your first widget to get started."}
+            </p>
+
+            {!search.trim() && (
+              <div className="mt-5">
+                <Button_big
+                  text="+ Add widget"
+                  onClick={() => navigate("/widgets/new")}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Widget table */}
+        {!loading && !error && filteredWidgets.length > 0 && (
+          <div className="overflow-hidden rounded-xl border border-gray-300 bg-white">
+            <WidgetTable
+              widgets={filteredWidgets}
+              agentNames={agentNames}
+              onEdit={handleEdit}
+              onDelete={(widgetId) => {
+                void handleDelete(widgetId);
+              }}
+            />
+          </div>
+        )}
       </div>
-
-      {!loading && filteredWidgets.length > 0 && (
-        <WidgetTable
-          widgets={filteredWidgets}
-          agentNames={agentNames}
-          onEdit={handleEdit}
-          onDelete={(widgetId) => {
-            void handleDelete(widgetId);
-          }}
-        />
-      )}
     </DashboardLayout>
   );
 }

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import Input from "../components/Input";
 import Button from "../components/Button_big";
-import "../styles/SignIn.css";
 
 import { login, getCurrentUser } from "../api/authApi";
 import { useDispatch } from "react-redux";
@@ -53,9 +52,16 @@ function SignIn() {
   }
 
   return (
-    <div className="page">
-      <div className="card">
-        <h1>Bot Builder</h1>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            Bot Builder
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Sign in to manage your bots and widgets.
+          </p>
+        </div>
 
         <Input
           label="Email"
@@ -72,15 +78,24 @@ function SignIn() {
           value={password}
           onChange={setPassword}
         />
-        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        {error && (
+          <p className="mb-4 text-sm font-medium text-red-600">{error}</p>
+        )}
 
         <Button
           text={loading ? "Signing in..." : "Sign In"}
           onClick={handleLogin}
         />
 
-        <p>
-          Don't have an account? <Link to="/signup">Sign Up</Link>
+        <p className="mt-6 text-center text-sm text-gray-500">
+          Don&apos;t have an account?{" "}
+          <Link
+            to="/signup"
+            className="font-medium text-indigo-600 hover:text-indigo-800"
+          >
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>

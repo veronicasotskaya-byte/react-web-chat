@@ -9,27 +9,13 @@ type Props = {
 
 function BotCommandItem({ command, onEdit, onDelete }: Props) {
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        padding: "10px",
-        marginBottom: "10px",
-      }}
-    >
-      <strong>{command.text}</strong>
+    <div className="rounded-xl border border-gray-200 bg-white p-4">
+      <p className="text-sm font-semibold text-gray-900">{command.text}</p>
 
-      <p>{command.description}</p>
+      <p className="mt-1 text-sm text-gray-600">{command.description}</p>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "8px",
-          marginTop: "10px",
-          width: "fit-content",
-        }}
-      >
+      <div className="mt-3 flex gap-2">
         <Button_small text="Edit" onClick={() => onEdit(command)} />
-
         <Button_small
           text="Delete"
           onClick={() => onDelete(command.commandId)}

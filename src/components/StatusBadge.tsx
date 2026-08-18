@@ -6,25 +6,10 @@ function StatusBadge({ status }: StatusBadgeProps) {
   const isActive = status === "Active";
 
   return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "6px",
-        padding: "4px 10px",
-        borderRadius: "20px",
-        fontSize: "14px",
-      }}
-    >
+    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-medium text-gray-700">
       <span
-        style={{
-          width: "8px",
-          height: "8px",
-          borderRadius: "50%",
-          backgroundColor: isActive ? "#22c55e" : "#9ca3af",
-        }}
+        className={`h-2 w-2 rounded-full ${isActive ? "bg-green-500" : "bg-gray-400"}`}
       />
-
       {status}
     </span>
   );

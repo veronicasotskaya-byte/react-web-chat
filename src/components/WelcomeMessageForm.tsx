@@ -48,17 +48,7 @@ function WelcomeMessageForm({ message, onSave, onCancel }: Props) {
   }
 
   return (
-    <div
-      style={{
-        marginTop: "20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
-        alignItems: "flex-start",
-        width: "fit-content",
-        alignSelf: "flex-start",
-      }}
-    >
+    <div className="mt-4 w-full max-w-xl space-y-1 rounded-xl border border-gray-200 bg-gray-50 p-4">
       <Input
         label="Message"
         type="text"
@@ -83,12 +73,11 @@ function WelcomeMessageForm({ message, onSave, onCancel }: Props) {
         onChange={setTypingDuration}
       />
 
-      <div style={{ display: "flex", gap: "8px" }}>
+      <div className="flex gap-2">
         <Button_small
           text={message ? "Save Changes" : "Add Welcome Message"}
           onClick={handleSubmit}
         />
-
         {onCancel && <Button_small text="Cancel" onClick={onCancel} />}
       </div>
     </div>

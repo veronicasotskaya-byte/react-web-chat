@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import Input from "../components/Input";
 import Button from "../components/Button_big";
-import "../styles/SignIn.css";
 
 import { signUp } from "../api/authApi";
 
@@ -52,9 +51,16 @@ function SignUp() {
   }
 
   return (
-    <div className="page">
-      <div className="card">
-        <h1>Create Account</h1>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
+      <div className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            Create Account
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Set up your company and start building bots.
+          </p>
+        </div>
 
         <Input
           label="Company Name"
@@ -96,15 +102,23 @@ function SignUp() {
           onChange={setConfirmPassword}
         />
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && (
+          <p className="mb-4 text-sm font-medium text-red-600">{error}</p>
+        )}
 
         <Button
           text={loading ? "Creating Account..." : "Create Account"}
           onClick={handleSignUp}
         />
 
-        <p>
-          Already have an account? <Link to="/signin">Sign In</Link>
+        <p className="mt-6 text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link
+            to="/signin"
+            className="font-medium text-indigo-600 hover:text-indigo-800"
+          >
+            Sign In
+          </Link>
         </p>
       </div>
     </div>

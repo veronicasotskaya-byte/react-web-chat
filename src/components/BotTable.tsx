@@ -1,4 +1,5 @@
 import type { Bot } from "../types/Bot";
+import DataTable from "./DataTable";
 
 type BotTableProps = {
   bots: Bot[];
@@ -7,57 +8,55 @@ type BotTableProps = {
 };
 
 function BotTable({ bots, onDelete, onEdit }: BotTableProps) {
+  const columns = [
+    {
+      key: "id",
+      header: "ID",
+      render: (bot: Bot) => (
+        <span className="text-sm text-gray-600">{bot.botId}</span>
+      ),
+    },
+    {
+      key: "name",
+      header: "Name",
+      render: (bot: Bot) => (
+        <span className="text-sm font-medium text-gray-900">{bot.name}</span>
+      ),
+    },
+    {
+      key: "username",
+      header: "Username",
+      render: (bot: Bot) => (
+        <span className="text-sm text-gray-600">{bot.username}</span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      render: (bot: Bot) => (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onEdit(bot)}
+            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete(bot.botId)}
+            className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <table
-      style={{
-        width: "100%",
-        borderCollapse: "collapse",
-        marginTop: "24px",
-      }}
-    >
-      <thead>
-        <tr>
-          <th style={headerStyle}>ID</th>
-          <th style={headerStyle}>Name</th>
-          <th style={headerStyle}>Username</th>
-          <th style={headerStyle}>Actions</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {bots.map((bot) => (
-          <tr key={bot.botId}>
-            <td style={cellStyle}>{bot.botId}</td>
-            <td style={cellStyle}>{bot.name}</td>
-            <td style={cellStyle}>{bot.username}</td>
-
-            <td style={cellStyle}>
-              <button
-                onClick={() => onEdit(bot)}
-                style={{ marginRight: "8px" }}
-              >
-                Edit
-              </button>
-
-              <button onClick={() => onDelete(bot.botId)}>Delete</button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <DataTable items={bots} columns={columns} getRowKey={(bot) => bot.botId} />
   );
 }
-
-const headerStyle = {
-  border: "1px solid #ccc",
-  padding: "10px",
-  textAlign: "left" as const,
-  backgroundColor: "#f4f4f4",
-};
-
-const cellStyle = {
-  border: "1px solid #ccc",
-  padding: "10px",
-};
 
 export default BotTable;

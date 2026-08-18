@@ -34,14 +34,7 @@ function BotCommandForm({ command, onSave, onCancel }: Props) {
   }
 
   return (
-    <div
-      style={{
-        marginTop: "20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
-      }}
-    >
+    <div className="mt-4 w-full max-w-xl space-y-1 rounded-xl border border-gray-200 bg-gray-50 p-4">
       <Input
         label="Command"
         type="text"
@@ -58,20 +51,12 @@ function BotCommandForm({ command, onSave, onCancel }: Props) {
         onChange={setDescription}
       />
 
-      <div
-        style={{
-          display: "flex",
-          gap: "8px",
-        }}
-      >
+      <div className="flex gap-2">
         <Button_small
-          text={command ? "Save" : "Add Command"}
+          text={command ? "Save Changes" : "Add Command"}
           onClick={handleSubmit}
         />
-
-        {command && onCancel && (
-          <Button_small text="Cancel" onClick={onCancel} />
-        )}
+        {onCancel && <Button_small text="Cancel" onClick={onCancel} />}
       </div>
     </div>
   );

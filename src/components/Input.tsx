@@ -1,7 +1,5 @@
-import "../styles/Input.css";
-
 type InputProps = {
-  label: string;
+  label?: string;
   type: string;
   placeholder: string;
   value: string;
@@ -20,19 +18,32 @@ function Input({
   error,
 }: InputProps) {
   return (
-    <div className="input-group">
-      <label>
-        {label}
-        {required && <span style={{ color: "red" }}> *</span>}
-      </label>
-      <br />
+    <div className={label ? "mb-5" : undefined}>
+      {label && (
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          {label}
+          {required && <span className="text-red-600"> *</span>}
+        </label>
+      )}
+
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        className={[
+          "block w-full rounded-lg border bg-white px-3 py-2.5",
+          "text-sm text-gray-900s",
+          "placeholder:text-gray-400",
+          "transition",
+          "focus:outline-none focus:ring-2 focus:ring-indigo-500",
+          error
+            ? "border-red-400 focus:border-red-500 focus:ring-red-500"
+            : "border-gray-300 focus:border-indigo-500",
+        ].join(" ")}
       />
-      {error && <span style={{ color: "red" }}>{error}</span>}
+
+      {error && <p className="mt-1.5 text-sm text-red-600">{error}</p>}
     </div>
   );
 }

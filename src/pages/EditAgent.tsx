@@ -131,63 +131,90 @@ function EditAgent() {
     }
   }
 
+  if (!isNewAgent && loading && !agent) {
+    return (
+      <DashboardLayout>
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <p className="text-sm text-gray-500">Loading agent...</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   if (!isNewAgent && !agent && !loading) {
     return (
       <DashboardLayout>
-        <h2>Agent not found.</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <h2 className="text-base font-semibold text-gray-900">
+            Agent not found.
+          </h2>
+        </div>
       </DashboardLayout>
     );
   }
 
   return (
     <DashboardLayout>
-      <div>
-        <h1>{isNewAgent ? "Create Agent" : "Edit Agent"}</h1>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            {isNewAgent ? "Create Agent" : "Edit Agent"}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            {isNewAgent
+              ? "Create a new agent and set their login details."
+              : "Update this agent's name, email, and password."}
+          </p>
+        </div>
 
-        <Input
-          label="Agent Name"
-          type="text"
-          value={name}
-          placeholder="Agent name"
-          onChange={setName}
-          required
-          error={nameError}
-        />
+        <div className="w-1/2 rounded-xl border border-gray-200 bg-white p-6">
+          <Input
+            label="Agent Name"
+            type="text"
+            value={name}
+            placeholder="Agent name"
+            onChange={setName}
+            required
+            error={nameError}
+          />
 
-        <Input
-          label="Email"
-          type="email"
-          value={email}
-          placeholder="Email"
-          onChange={setEmail}
-          required
-          error={emailError}
-        />
+          <Input
+            label="Email"
+            type="email"
+            value={email}
+            placeholder="Email"
+            onChange={setEmail}
+            required
+            error={emailError}
+          />
 
-        <Input
-          label="Password"
-          type="password"
-          value={password}
-          placeholder={isNewAgent ? "Password" : "Leave blank to keep current"}
-          onChange={setPassword}
-          required={isNewAgent}
-          error={passwordError}
-        />
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            placeholder={isNewAgent ? "Password" : "Leave blank to keep current"}
+            onChange={setPassword}
+            required={isNewAgent}
+            error={passwordError}
+          />
 
-        <Button
-          text={
-            saving
-              ? "Saving..."
-              : isNewAgent
-                ? "Create Agent"
-                : "Save Changes"
-          }
-          onClick={() => {
-            if (!saving) {
-              void handleSave();
-            }
-          }}
-        />
+          <div className="mt-6">
+            <Button
+              text={
+                saving
+                  ? "Saving..."
+                  : isNewAgent
+                    ? "Create Agent"
+                    : "Save Changes"
+              }
+              onClick={() => {
+                if (!saving) {
+                  void handleSave();
+                }
+              }}
+            />
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   );

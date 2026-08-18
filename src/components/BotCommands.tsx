@@ -43,28 +43,25 @@ function BotCommands({ commands, onChange }: Props) {
   }
 
   return (
-    <div>
-      <h3>Commands</h3>
+    <div className="mt-6">
+      <h3 className="mb-3 text-base font-semibold text-gray-900">Commands</h3>
 
-      {commands.length === 0 && <p>No commands yet.</p>}
+      {commands.length === 0 && (
+        <p className="mb-3 text-sm text-gray-500">No commands yet.</p>
+      )}
 
-      {commands.map((command) => (
-        <BotCommandItem
-          key={command.commandId}
-          command={command}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      ))}
+      <div className="space-y-3">
+        {commands.map((command) => (
+          <BotCommandItem
+            key={command.commandId}
+            command={command}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
 
-      <div
-        style={{
-          marginTop: "24px",
-          marginBottom: "24px",
-          alignItems: "flex-start",
-          width: "fit-content",
-        }}
-      >
+      <div className="mt-4">
         {!showForm ? (
           <Button_small
             text="Add Command"

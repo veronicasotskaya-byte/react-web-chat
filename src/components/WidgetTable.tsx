@@ -1,4 +1,5 @@
 import type { Widget } from "../types/Widget";
+import DataTable from "./DataTable";
 
 type WidgetTableProps = {
   widgets: Widget[];
@@ -13,108 +14,110 @@ function WidgetTable({
   onEdit,
   onDelete,
 }: WidgetTableProps) {
+  const columns = [
+    {
+      key: "name",
+      header: "Name",
+      render: (widget: Widget) => (
+        <span className="text-sm font-medium text-gray-900">
+          {widget.publicWidgetId ? (
+            <a
+              href={`/widgets/demo/${encodeURIComponent(
+                widget.publicWidgetId,
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:text-indigo-800 hover:underline"
+            >
+              {widget.name}
+            </a>
+          ) : (
+            widget.name
+          )}
+        </span>
+      ),
+    },
+
+    {
+      key: "enabled",
+      header: "Enabled",
+      render: (widget: Widget) =>
+        widget.enabled ? (
+          <span className="inline-flex rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700">
+            Enabled
+          </span>
+        ) : (
+          <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+            Disabled
+          </span>
+        ),
+    },
+
+    {
+      key: "agents",
+      header: "Agents",
+      render: (widget: Widget) => (
+        <div className="flex flex-wrap gap-1.5">
+          {widget.agents.map((agent) => (
+            <span
+              key={agent.widgetAgentId}
+              className="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700"
+            >
+              {agentNames.get(agent.agentId) ?? `Agent ${agent.agentId}`}
+            </span>
+          ))}
+        </div>
+      ),
+    },
+
+    {
+      key: "origins",
+      header: "Allowed Origins",
+      render: (widget: Widget) => (
+        <div className="max-w-xs space-y-1 text-sm text-gray-600">
+          {widget.allowedOrigins.length > 0
+            ? widget.allowedOrigins.map((origin) => (
+                <div key={origin} className="truncate" title={origin}>
+                  {origin}
+                </div>
+              ))
+            : "None"}
+        </div>
+      ),
+    },
+
+    {
+      key: "actions",
+      header: "Actions",
+      render: (widget: Widget) => (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onEdit(widget)}
+            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onDelete(widget.widgetId)}
+            className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <table
-      style={{
-        width: "100%",
-        borderCollapse: "collapse",
-        marginTop: "24px",
-      }}
-    >
-      <thead>
-        <tr>
-          <th style={headerStyle}>Name</th>
-          <th style={headerStyle}>Enabled</th>
-          <th style={headerStyle}>Agents</th>
-          <th style={headerStyle}>Allowed Origins</th>
-          <th style={headerStyle}>Actions</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {widgets.map((widget) => (
-          <tr key={widget.widgetId}>
-            <td style={cellStyle}>
-              {widget.publicWidgetId ? (
-                <a
-                  href={`/widgets/demo/${encodeURIComponent(widget.publicWidgetId)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {widget.name}
-                </a>
-              ) : (
-                widget.name
-              )}
-            </td>
-
-            <td style={cellStyle}>{widget.enabled ? "Yes" : "No"}</td>
-
-            <td style={cellStyle}>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "6px",
-                }}
-              >
-                {widget.agents
-                  .slice()
-                  .sort((a, b) => a.priority - b.priority)
-                  .map((widgetAgent) => {
-                    const name =
-                      agentNames.get(widgetAgent.agentId) ??
-                      `Agent ${widgetAgent.agentId}`;
-
-                    return (
-                      <span
-                        key={widgetAgent.widgetAgentId}
-                        style={{
-                          padding: "4px 8px",
-                          borderRadius: "12px",
-                          background: "#f1f5f9",
-                          fontSize: "13px",
-                        }}
-                      >
-                        {name}
-                      </span>
-                    );
-                  })}
-              </div>
-            </td>
-
-            <td style={cellStyle}>{widget.allowedOrigins.join(", ")}</td>
-
-            <td style={cellStyle}>
-              <button
-                type="button"
-                onClick={() => onEdit(widget)}
-                style={{ marginRight: "8px" }}
-              >
-                Edit
-              </button>
-
-              <button type="button" onClick={() => onDelete(widget.widgetId)}>
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <DataTable
+      items={widgets}
+      columns={columns}
+      getRowKey={(widget) => widget.widgetId}
+    />
   );
 }
-
-const headerStyle = {
-  border: "1px solid #ccc",
-  padding: "10px",
-  textAlign: "left" as const,
-  backgroundColor: "#f4f4f4",
-};
-
-const cellStyle = {
-  border: "1px solid #ccc",
-  padding: "10px",
-};
 
 export default WidgetTable;

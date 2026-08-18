@@ -53,31 +53,27 @@ function WelcomeMessages({ welcomeMessages, onChange }: Props) {
   }
 
   return (
-    <div>
-      <h3>Welcome Messages</h3>
+    <div className="mt-6">
+      <h3 className="mb-3 text-base font-semibold text-gray-900">
+        Welcome Messages
+      </h3>
 
-      {welcomeMessages.length === 0 && <p>No welcome messages yet.</p>}
+      {welcomeMessages.length === 0 && (
+        <p className="mb-3 text-sm text-gray-500">No welcome messages yet.</p>
+      )}
 
-      {welcomeMessages.map((message) => (
-        <WelcomeMessageItem
-          key={message.welcomeMessageId}
-          welcomeMessage={message}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      ))}
+      <div className="space-y-3">
+        {welcomeMessages.map((message) => (
+          <WelcomeMessageItem
+            key={message.welcomeMessageId}
+            welcomeMessage={message}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
 
-      <div
-        style={{
-          marginTop: "24px",
-          marginBottom: "24px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          alignItems: "flex-start",
-          width: "fit-content",
-        }}
-      >
+      <div className="mt-4">
         {!showForm ? (
           <Button_small
             text="Add Welcome Message"

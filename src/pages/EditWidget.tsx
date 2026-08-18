@@ -338,351 +338,67 @@ function EditWidget() {
   if (!isNewWidget && loading && !widget) {
     return (
       <DashboardLayout>
-        <h2>Loading widget...</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <p className="text-sm text-gray-500">Loading widget...</p>
+        </div>
       </DashboardLayout>
     );
   }
 
-  /*
-   * Not found.
-   */
   if (!isNewWidget && !widget) {
     return (
       <DashboardLayout>
-        <h2>Widget not found.</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <h2 className="text-base font-semibold text-gray-900">
+            Widget not found.
+          </h2>
+        </div>
       </DashboardLayout>
     );
   }
 
+  const selectClassName = [
+    "block rounded-lg border border-gray-300 bg-white px-3 py-2.5",
+    "text-sm text-gray-900",
+    "focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500",
+  ].join(" ");
+
+  const checkboxClassName =
+    "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500";
+
   return (
     <DashboardLayout>
-      <div>
-        <h1>{isNewWidget ? "Create Widget" : "Edit Widget"}</h1>
-
-        {/* Widget Name */}
-
-        <Input
-          label="Widget Name"
-          type="text"
-          value={name}
-          placeholder="Widget name"
-          onChange={setName}
-          required
-          error={nameError}
-        />
-
-        {/* Avatar URL */}
-
-        <Input
-          label="Avatar URL"
-          type="text"
-          value={avatarUrl}
-          placeholder="Avatar URL"
-          onChange={setAvatarUrl}
-        />
-
-        {/* Enabled */}
-
-        <div
-          style={{
-            marginTop: "20px",
-            marginBottom: "20px",
-          }}
-        >
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={enabled}
-              onChange={(event) => setEnabled(event.target.checked)}
-            />
-
-            <span>Enabled</span>
-          </label>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            {isNewWidget ? "Create Widget" : "Edit Widget"}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            {isNewWidget
+              ? "Create a new widget and assign an agent."
+              : "Update this widget's details, agents, and allowed origins."}
+          </p>
         </div>
-
-        {/* Standalone Public */}
-
-        <div
-          style={{
-            marginBottom: "20px",
-          }}
-        >
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={standAlonePublic}
-              onChange={(event) => setStandAlonePublic(event.target.checked)}
-            />
-
-            <span>Standalone Public</span>
-          </label>
-        </div>
-
-        {/* Agents */}
-
-        <div
-          style={{
-            marginTop: "24px",
-            marginBottom: "24px",
-          }}
-        >
-          <h3>Agents</h3>
-
-          {widgetAgents.length === 0 && (
-            <p style={{ color: "#666" }}>
-              No agent or bot assigned to this widget.
-            </p>
-          )}
-
-          {widgetAgents.map((widgetAgent, index) => (
-            <div
-              key={`${widgetAgent.widgetAgentId}-${index}`}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                marginBottom: "10px",
-                padding: "10px",
-                border: "1px solid #ddd",
-                borderRadius: "6px",
-              }}
-            >
-              {/* Priority */}
-
-              <span
-                style={{
-                  width: "25px",
-                  fontWeight: "bold",
-                }}
-              >
-                {index + 1}.
-              </span>
-
-              {/* Agent / Bot */}
-
-              <select
-                value={widgetAgent.agentId}
-                onChange={(event) =>
-                  updateWidgetAgent(index, {
-                    agentId: Number(event.target.value),
-                  })
-                }
-                style={{
-                  flex: 1,
-                  padding: "8px",
-                }}
-              >
-                {agentsAndBots
-                  .filter((item) => "userId" in item && item.userId != null)
-                  .map((item) => (
-                    <option key={item.userId} value={item.userId}>
-                      {item.name}
-                    </option>
-                  ))}
-              </select>
-
-              {/* Action */}
-
-              <select
-                value={widgetAgent.action}
-                onChange={(event) =>
-                  updateWidgetAgent(index, {
-                    action: event.target.value as "Assign" | "Notify",
-                  })
-                }
-                style={{
-                  padding: "8px",
-                }}
-              >
-                <option value="Assign">Assign</option>
-                <option value="Notify">Notify</option>
-              </select>
-
-              {/* Enabled */}
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "5px",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={widgetAgent.enabled}
-                  onChange={(event) =>
-                    updateWidgetAgent(index, {
-                      enabled: event.target.checked,
-                    })
-                  }
-                />
-                Enabled
-              </label>
-
-              {/* Remove */}
-
-              <Button_small
-                text="Remove"
-                onClick={() => removeWidgetAgent(index)}
-              />
-            </div>
-          ))}
-
-          {widgetAgents.length === 0 && (
-            <Button_small text="+ Add Agent" onClick={addWidgetAgent} />
-          )}
-        </div>
-
-        {/* Allowed Origins */}
-
-        <div
-          style={{
-            marginTop: "24px",
-            marginBottom: "24px",
-          }}
-        >
-          <h3>Allowed Origins</h3>
-
-          {allowedOrigins.map((origin, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                gap: "10px",
-                marginBottom: "10px",
-                alignItems: "center",
-              }}
-            >
-              <input
-                type="text"
-                value={origin}
-                placeholder="https://example.com"
-                onChange={(event) => {
-                  const value = event.target.value;
-
-                  setAllowedOrigins((current) =>
-                    current.map((item, itemIndex) =>
-                      itemIndex === index ? value : item,
-                    ),
-                  );
-
-                  setAllowedOriginsError("");
-                }}
-                onBlur={() => {
-                  const value = allowedOrigins[index];
-
-                  if (!value?.trim()) {
-                    return;
-                  }
-
-                  try {
-                    const normalized = normalizeOrigin(value);
-
-                    setAllowedOrigins((current) =>
-                      current.map((item, itemIndex) =>
-                        itemIndex === index ? normalized : item,
-                      ),
-                    );
-
-                    setAllowedOriginsError("");
-                  } catch {
-                    setAllowedOriginsError(
-                      "Please enter a valid origin, for example https://example.com.",
-                    );
-                  }
-                }}
-                style={{
-                  flex: 1,
-                  padding: "10px",
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                }}
-              />
-
-              <Button_small
-                text="Remove"
-                onClick={() => {
-                  setAllowedOrigins((current) =>
-                    current.filter((_, itemIndex) => itemIndex !== index),
-                  );
-                }}
-              />
-            </div>
-          ))}
-
-          <Button_small
-            text="+ Add Origin"
-            onClick={() => {
-              setAllowedOrigins((current) => [...current, ""]);
-
-              setAllowedOriginsError("");
-            }}
-          />
-
-          {allowedOriginsError && (
-            <p
-              style={{
-                color: "red",
-                marginTop: "8px",
-              }}
-            >
-              {allowedOriginsError}
-            </p>
-          )}
-        </div>
-
-        {/* Public Widget */}
 
         {!isNewWidget && widget?.publicWidgetId && (
-          <div
-            style={{
-              marginTop: "24px",
-              marginBottom: "24px",
-              padding: "16px",
-              border: "1px solid #ddd",
-              borderRadius: "6px",
-            }}
-          >
-            <strong>Public Widget ID</strong>
+          <div className="flex w-1/2 flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-gray-900">
+                Public Widget ID
+              </p>
+              <p className="mt-1 break-all font-mono text-sm text-gray-600">
+                {widget.publicWidgetId}
+              </p>
+            </div>
 
-            <p
-              style={{
-                fontFamily: "monospace",
-                wordBreak: "break-all",
-              }}
-            >
-              {widget.publicWidgetId}
-            </p>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
+            <div className="flex shrink-0 flex-wrap items-center gap-2">
               <a
                 href={`/widgets/demo/${encodeURIComponent(
                   widget.publicWidgetId,
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-gray-900"
               >
                 Try Widget
               </a>
@@ -694,52 +410,239 @@ function EditWidget() {
                 }}
               />
             </div>
-
-            {allowedOrigins.length === 0 && (
-              <p
-                style={{
-                  marginTop: "12px",
-                  color: "#666",
-                  fontSize: "14px",
-                }}
-              >
-                Tip: add <code>{window.location.origin}</code> under Allowed
-                Origins if the demo fails to load.
-              </p>
-            )}
           </div>
         )}
 
-        {/* New widget message */}
+        <div className="w-1/2 rounded-xl border border-gray-200 bg-white p-6">
+          <Input
+            label="Widget Name"
+            type="text"
+            value={name}
+            placeholder="Widget name"
+            onChange={setName}
+            required
+            error={nameError}
+          />
 
-        {isNewWidget && (
-          <p
-            style={{
-              marginTop: "20px",
-              marginBottom: "20px",
-              color: "#666",
-            }}
-          >
-            Try Widget after creation
-          </p>
-        )}
+          <Input
+            label="Avatar URL"
+            type="text"
+            value={avatarUrl}
+            placeholder="Avatar URL"
+            onChange={setAvatarUrl}
+          />
 
-        {/* Save */}
+          <div className="mb-5 space-y-3">
+            <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-gray-700">
+              <input
+                type="checkbox"
+                checked={enabled}
+                onChange={(event) => setEnabled(event.target.checked)}
+                className={checkboxClassName}
+              />
+              Enabled
+            </label>
 
-        <Button
-          text={
-            saving
-              ? "Saving..."
-              : isNewWidget
-                ? "Create Widget"
-                : "Save Changes"
-          }
-          onClick={() => {
-            if (!saving) {
-              void handleSave();
-            }
-          }}
-        />
+            <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-gray-700">
+              <input
+                type="checkbox"
+                checked={standAlonePublic}
+                onChange={(event) => setStandAlonePublic(event.target.checked)}
+                className={checkboxClassName}
+              />
+              Standalone Public
+            </label>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="mb-3 text-base font-semibold text-gray-900">
+              Agents
+            </h3>
+
+            {widgetAgents.length === 0 && (
+              <p className="mb-3 text-sm text-gray-500">
+                No agent or bot assigned to this widget.
+              </p>
+            )}
+
+            <div className="space-y-3">
+              {widgetAgents.map((widgetAgent, index) => (
+                <div
+                  key={`${widgetAgent.widgetAgentId}-${index}`}
+                  className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 sm:flex-row sm:items-center"
+                >
+                  <span className="w-6 text-sm font-semibold text-gray-900">
+                    {index + 1}.
+                  </span>
+
+                  <select
+                    value={widgetAgent.agentId}
+                    onChange={(event) =>
+                      updateWidgetAgent(index, {
+                        agentId: Number(event.target.value),
+                      })
+                    }
+                    className={`${selectClassName} min-w-0 flex-1`}
+                  >
+                    {agentsAndBots
+                      .filter((item) => "userId" in item && item.userId != null)
+                      .map((item) => (
+                        <option key={item.userId} value={item.userId}>
+                          {item.name}
+                        </option>
+                      ))}
+                  </select>
+
+                  <select
+                    value={widgetAgent.action}
+                    onChange={(event) =>
+                      updateWidgetAgent(index, {
+                        action: event.target.value as "Assign" | "Notify",
+                      })
+                    }
+                    className={selectClassName}
+                  >
+                    <option value="Assign">Assign</option>
+                    <option value="Notify">Notify</option>
+                  </select>
+
+                  <label className="flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={widgetAgent.enabled}
+                      onChange={(event) =>
+                        updateWidgetAgent(index, {
+                          enabled: event.target.checked,
+                        })
+                      }
+                      className={checkboxClassName}
+                    />
+                    Enabled
+                  </label>
+
+                  <Button_small
+                    text="Remove"
+                    onClick={() => removeWidgetAgent(index)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {widgetAgents.length === 0 && (
+              <div className="mt-4">
+                <Button_small text="+ Add Agent" onClick={addWidgetAgent} />
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6">
+            <h3 className="mb-3 text-base font-semibold text-gray-900">
+              Allowed Origins
+            </h3>
+
+            <div className="space-y-3">
+              {allowedOrigins.map((origin, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={origin}
+                    placeholder="https://example.com"
+                    onChange={(event) => {
+                      const value = event.target.value;
+
+                      setAllowedOrigins((current) =>
+                        current.map((item, itemIndex) =>
+                          itemIndex === index ? value : item,
+                        ),
+                      );
+
+                      setAllowedOriginsError("");
+                    }}
+                    onBlur={() => {
+                      const value = allowedOrigins[index];
+
+                      if (!value?.trim()) {
+                        return;
+                      }
+
+                      try {
+                        const normalized = normalizeOrigin(value);
+
+                        setAllowedOrigins((current) =>
+                          current.map((item, itemIndex) =>
+                            itemIndex === index ? normalized : item,
+                          ),
+                        );
+
+                        setAllowedOriginsError("");
+                      } catch {
+                        setAllowedOriginsError(
+                          "Please enter a valid origin, for example https://example.com.",
+                        );
+                      }
+                    }}
+                    className={[
+                      "block min-w-0 flex-1 rounded-lg border bg-white px-3 py-2.5",
+                      "text-sm text-gray-900 placeholder:text-gray-400",
+                      "focus:outline-none focus:ring-2",
+                      allowedOriginsError
+                        ? "border-red-400 focus:border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500",
+                    ].join(" ")}
+                  />
+
+                  <Button_small
+                    text="Remove"
+                    onClick={() => {
+                      setAllowedOrigins((current) =>
+                        current.filter((_, itemIndex) => itemIndex !== index),
+                      );
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4">
+              <Button_small
+                text="+ Add Origin"
+                onClick={() => {
+                  setAllowedOrigins((current) => [...current, ""]);
+                  setAllowedOriginsError("");
+                }}
+              />
+            </div>
+
+            {allowedOriginsError && (
+              <p className="mt-2 text-sm font-medium text-red-600">
+                {allowedOriginsError}
+              </p>
+            )}
+          </div>
+
+          {isNewWidget && (
+            <p className="mt-6 text-sm text-gray-500">
+              Try Widget after creation
+            </p>
+          )}
+
+          <div className="mt-6">
+            <Button
+              text={
+                saving
+                  ? "Saving..."
+                  : isNewWidget
+                    ? "Create Widget"
+                    : "Save Changes"
+              }
+              onClick={() => {
+                if (!saving) {
+                  void handleSave();
+                }
+              }}
+            />
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   );

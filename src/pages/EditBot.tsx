@@ -121,7 +121,9 @@ function EditBot() {
   if (!isNewBot && (loading || bots.length === 0)) {
     return (
       <DashboardLayout>
-        <h2>Loading bot...</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <p className="text-sm text-gray-500">Loading bot...</p>
+        </div>
       </DashboardLayout>
     );
   }
@@ -129,7 +131,11 @@ function EditBot() {
   if (!isNewBot && !bot) {
     return (
       <DashboardLayout>
-        <h2>Bot not found.</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <h2 className="text-base font-semibold text-gray-900">
+            Bot not found.
+          </h2>
+        </div>
       </DashboardLayout>
     );
   }
@@ -180,112 +186,98 @@ function EditBot() {
 
   return (
     <DashboardLayout>
-      <div>
-        <h1>{isNewBot ? "Create Bot" : "Edit Bot"}</h1>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            {isNewBot ? "Create Bot" : "Edit Bot"}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            {isNewBot
+              ? "Create a new bot and configure its commands."
+              : "Update this bot details, commands, and welcome messages."}
+          </p>
+        </div>
 
         {!isNewBot && (
-          <div
-            style={{
-              marginBottom: "20px",
-              padding: "12px",
-              border: "1px solid #ddd",
-              borderRadius: "6px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "16px",
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                overflow: "hidden",
-              }}
-            >
-              <strong>API Token:</strong>{" "}
-              <span
-                style={{
-                  fontFamily: "monospace",
-                  wordBreak: "break-all",
-                }}
-              >
+          <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between w-1/2">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-gray-900">API Token</p>
+              <p className="mt-1 break-all font-mono text-sm text-gray-600">
                 {token ?? bot?.formattedToken ?? "No token"}
-              </span>
+              </p>
             </div>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "8px",
-                marginTop: "10px",
-              }}
-            >
+            <div className="flex shrink-0 gap-2">
               <Button_small
                 text="Copy Token"
                 onClick={() => {
                   void handleCopyToken();
                 }}
               />
-
               <Button_small
                 text="Regenerate Token"
                 onClick={() => {
                   void handleRegenerateToken();
                 }}
-                style={{ minWidth: "170px" }}
               />
             </div>
           </div>
         )}
 
-        <Input
-          label="Bot Name"
-          required
-          type="text"
-          value={name}
-          placeholder="Bot name"
-          onChange={(value) => {
-            setName(value);
-            if (nameError) setNameError("");
-          }}
-          error={nameError}
-        />
+        <div className="rounded-xl border border-gray-200 bg-white p-6 w-1/2">
+          <Input
+            label="Bot Name"
+            required
+            type="text"
+            value={name}
+            placeholder="Bot name"
+            onChange={(value) => {
+              setName(value);
+              if (nameError) setNameError("");
+            }}
+            error={nameError}
+          />
 
-        <Input
-          label="Username"
-          required
-          type="text"
-          value={username}
-          placeholder="Telegram username"
-          onChange={(value) => {
-            setUsername(value);
-            if (usernameError) setUsernameError("");
-          }}
-          error={usernameError}
-        />
+          <Input
+            label="Username"
+            required
+            type="text"
+            value={username}
+            placeholder="Telegram username"
+            onChange={(value) => {
+              setUsername(value);
+              if (usernameError) setUsernameError("");
+            }}
+            error={usernameError}
+          />
 
-        <Input
-          label="Description"
-          type="text"
-          value={description}
-          placeholder="Description"
-          onChange={setDescription}
-        />
+          <Input
+            label="Description"
+            type="text"
+            value={description}
+            placeholder="Description"
+            onChange={setDescription}
+          />
 
-        <BotCommands commands={commands} onChange={setCommands} />
-        <WelcomeMessages
-          welcomeMessages={welcomeMessages}
-          onChange={setWelcomeMessages}
-        />
+          <BotCommands commands={commands} onChange={setCommands} />
+          <WelcomeMessages
+            welcomeMessages={welcomeMessages}
+            onChange={setWelcomeMessages}
+          />
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
-        <Button_big
-          text={saving ? "Saving..." : isNewBot ? "Create Bot" : "Save Changes"}
-          onClick={() => {
-            void handleSave();
-          }}
-        />
+          {error && (
+            <p className="mb-4 text-sm font-medium text-red-600">{error}</p>
+          )}
+          <div className="mt-6">
+            <Button_big
+              text={
+                saving ? "Saving..." : isNewBot ? "Create Bot" : "Save Changes"
+              }
+              onClick={() => {
+                void handleSave();
+              }}
+            />
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   );
