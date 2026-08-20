@@ -33,7 +33,7 @@ function Input({
         onChange={(event) => onChange(event.target.value)}
         className={[
           "block w-full rounded-lg border bg-white px-3 py-2.5",
-          "text-sm text-gray-900s",
+          "text-sm text-gray-900",
           "placeholder:text-gray-400",
           "transition",
           "focus:outline-none focus:ring-2 focus:ring-indigo-500",

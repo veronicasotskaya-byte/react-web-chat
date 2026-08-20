@@ -34,67 +34,103 @@ function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="min-h-screen">
-        {/* Sidebar */}
-        <aside className="fixed inset-y-0 left-0 flex w-64 flex-col border-r border-gray-200 bg-white">
-          {/* Logo / App name */}
-          <div className="flex h-16 items-center border-b border-gray-200 px-6">
-            <h1 className="text-xl font-bold tracking-tight text-gray-900">
-              Bot Builder
-            </h1>
-          </div>
+      {/* Sidebar - desktop */}
+      <aside className="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col border-r border-gray-200 bg-white md:flex">
+        {/* Logo */}
+        <div className="flex h-16 items-center border-b border-gray-200 px-6">
+          <h1 className="text-xl font-bold tracking-tight text-gray-900">
+            Bot Builder
+          </h1>
+        </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-3 py-6">
-            {navigation.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  [
-                    "block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-indigo-50 text-indigo-700"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
-                  ].join(" ")
-                }
-              >
-                {item.name}
-              </NavLink>
-            ))}
-          </nav>
-
-          {/* Logout */}
-          <div className="border-t border-gray-200 p-3">
-            <button
-              type="button"
-              onClick={handleLogout}
-              className={[
-                "w-full",
-                "rounded-lg",
-                "px-3",
-                "py-2.5",
-                "text-left",
-                "text-sm",
-                "font-medium",
-                "text-gray-700",
-                "transition-colors",
-                "hover:bg-gray-100",
-                "hover:text-gray-900",
-              ].join(" ")}
+        {/* Navigation */}
+        <nav className="flex-1 space-y-1 px-3 py-6">
+          {navigation.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                [
+                  "block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-indigo-50 text-indigo-700"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+                ].join(" ")
+              }
             >
-              Logout
-            </button>
-          </div>
-        </aside>
+              {item.name}
+            </NavLink>
+          ))}
+        </nav>
 
-        {/* Main content */}
-        <main className="ml-64 min-h-screen min-w-0 flex-1">
-          <div className="mx-auto w-full max-w-7xl px-6 py-8 lg:px-8">
-            {children}
-          </div>
-        </main>
-      </div>
+        {/* Logout */}
+        <div className="border-t border-gray-200 p-3">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className={[
+              "w-full",
+              "rounded-lg",
+              "px-3",
+              "py-2.5",
+              "text-left",
+              "text-sm",
+              "font-medium",
+              "text-gray-700",
+              "transition-colors",
+              "hover:bg-gray-100",
+              "hover:text-gray-900",
+            ].join(" ")}
+          >
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile navigation */}
+      <header className="border-b border-gray-200 bg-white md:hidden">
+        {/* Logo */}
+        <div className="flex h-16 items-center justify-between px-4">
+          <h1 className="text-lg font-bold tracking-tight text-gray-900">
+            Bot Builder
+          </h1>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+          >
+            Logout
+          </button>
+        </div>
+
+        {/* Mobile navigation links */}
+        <nav className="flex gap-1 overflow-x-auto border-t border-gray-100 px-3 py-2">
+          {navigation.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                [
+                  "shrink-0 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-indigo-50 text-indigo-700"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+                ].join(" ")
+              }
+            >
+              {item.name}
+            </NavLink>
+          ))}
+        </nav>
+      </header>
+
+      {/* Main content */}
+      <main className="min-h-screen min-w-0 md:ml-64">
+        <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

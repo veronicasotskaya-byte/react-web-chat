@@ -381,7 +381,7 @@ function EditWidget() {
         </div>
 
         {!isNewWidget && widget?.publicWidgetId && (
-          <div className="flex w-1/2 flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex w-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between lg:w-1/2">
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-gray-900">
                 Public Widget ID
@@ -413,7 +413,7 @@ function EditWidget() {
           </div>
         )}
 
-        <div className="w-1/2 rounded-xl border border-gray-200 bg-white p-6">
+        <div className="w-full rounded-xl border border-gray-200 bg-white p-6 lg:w-1/2">
           <Input
             label="Widget Name"
             type="text"

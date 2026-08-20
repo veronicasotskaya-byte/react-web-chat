@@ -167,7 +167,7 @@ function EditAgent() {
           </p>
         </div>
 
-        <div className="w-1/2 rounded-xl border border-gray-200 bg-white p-6">
+        <div className="w-full rounded-xl border border-gray-200 bg-white p-6 lg:w-1/2">
           <Input
             label="Agent Name"
             type="text"

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -7,6 +6,8 @@ import BotCard from "../components/BotCard";
 import Input from "../components/Input";
 import Button_big from "../components/Button_big";
 import BotTable from "../components/BotTable";
+import EditBotModal from "../components/EditBotModal";
+import type { Bot } from "../types/Bot";
 
 import { BsGrid3X3GapFill } from "react-icons/bs";
 import { FaList } from "react-icons/fa";
@@ -14,11 +15,23 @@ import { FaList } from "react-icons/fa";
 import type { RootState, AppDispatch } from "../app/store";
 import { fetchBots, deleteBotThunk } from "../features/bots/botSlice";
 
+const emptyBot: Bot = {
+  botId: 0,
+  username: "",
+  name: "",
+  description: "",
+  webhookUrl: "",
+  formattedToken: "",
+  avatarUrl: "",
+  commands: [],
+  welcomeMessages: [],
+};
+
 function Bots() {
   const [view, setView] = useState<"cards" | "grid">("cards");
   const [search, setSearch] = useState("");
+  const [selectedBot, setSelectedBot] = useState<Bot | null>(null);
 
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
   const { bots, loading, error } = useSelector(
@@ -58,12 +71,12 @@ function Bots() {
 
           <Button_big
             text="+ Create Bot"
-            onClick={() => navigate("/bots/new")}
+            onClick={() => setSelectedBot(emptyBot)}
           />
         </div>
 
         {/* Search + view switcher */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="w-full max-w-xs">
             <Input
               type="text"
@@ -73,7 +86,7 @@ function Bots() {
             />
           </div>
 
-          <div className="-mt-3.2 flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               aria-label="Card view"
@@ -141,7 +154,7 @@ function Bots() {
               <div className="mt-5">
                 <Button_big
                   text="+ Create Bot"
-                  onClick={() => navigate("/bots/new")}
+                  onClick={() => setSelectedBot(emptyBot)}
                 />
               </div>
             )}
@@ -156,7 +169,7 @@ function Bots() {
                 key={bot.botId}
                 bot={bot}
                 onDelete={handleDeleteBot}
-                onEdit={(bot) => navigate(`/bots/${bot.botId}/edit`)}
+                onEdit={(bot) => setSelectedBot(bot)}
               />
             ))}
           </div>
@@ -168,9 +181,16 @@ function Bots() {
             <BotTable
               bots={filteredBots}
               onDelete={handleDeleteBot}
-              onEdit={(bot) => navigate(`/bots/${bot.botId}/edit`)}
+              onEdit={(bot) => setSelectedBot(bot)}
             />
           </div>
+        )}
+
+        {selectedBot && (
+          <EditBotModal
+            bot={selectedBot}
+            onClose={() => setSelectedBot(null)}
+          />
         )}
       </div>
     </DashboardLayout>

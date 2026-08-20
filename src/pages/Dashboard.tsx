@@ -28,7 +28,6 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Page header */}
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">
             Dashboard
@@ -36,9 +35,7 @@ function Dashboard() {
           <p className="mt-1 text-sm text-gray-500">Welcome to bot builder.</p>
         </div>
 
-        {/* Summary cards */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {/* Bots */}
           <button
             type="button"
             onClick={() => navigate("/bots")}
@@ -50,7 +47,6 @@ function Dashboard() {
             </p>
           </button>
 
-          {/* Agents */}
           <button
             type="button"
             onClick={() => navigate("/agents")}
@@ -62,7 +58,6 @@ function Dashboard() {
             </p>
           </button>
 
-          {/* Widgets */}
           <button
             type="button"
             onClick={() => navigate("/widgets")}
@@ -74,7 +69,6 @@ function Dashboard() {
             </p>
           </button>
 
-          {/* Chats */}
           <button
             type="button"
             onClick={() => navigate("/chats")}

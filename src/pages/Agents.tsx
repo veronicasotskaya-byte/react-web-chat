@@ -121,11 +121,15 @@ function Agents() {
             </p>
           </div>
 
-          <Button text="+ Add agent" onClick={() => navigate("/agents/new")} />
+          <Button
+            text="+ Add agent"
+            onClick={() => navigate("/agents/new")}
+            className="w-full sm:w-auto"
+          />
         </div>
 
         {/* Search + view controls */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="w-full max-w-xs">
             <Input
               type="text"
@@ -135,7 +139,7 @@ function Agents() {
             />
           </div>
 
-          <div className="-mt-3.2 flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setView("cards")}
@@ -223,7 +227,7 @@ function Agents() {
                 ))}
               </div>
             ) : (
-              <div className="overflow-hidden rounded-xl border border-gray-300 bg-white">
+              <div className="overflow-x-auto rounded-xl border border-gray-300 bg-white">
                 <AgentTable
                   agents={paginatedAgents}
                   onDelete={handleDeleteAgent}
@@ -239,7 +243,7 @@ function Agents() {
 
         {/* Pagination */}
         {!loading && !error && totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
             <button
               type="button"
               onClick={() => setCurrentPage((page) => page - 1)}
