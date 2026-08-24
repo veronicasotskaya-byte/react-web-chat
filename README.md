@@ -30,3 +30,7 @@ If you are developing a production application, we recommend enabling type-aware
 ```
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+
+
+<img width="932" height="645" alt="React_web_chat" src="https://github.com/user-attachments/assets/24622cfb-3922-4ba9-a15a-d32dffcd35ce" />
+
